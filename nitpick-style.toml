@@ -1,0 +1,109 @@
+[nitpick.styles]
+include = [
+  'py://nitpick/resources/any/pre-commit-hooks',
+]
+
+[".editorconfig"]
+root = true
+
+[".editorconfig"."*"]
+charset = 'utf-8'
+end_of_line = 'lf'
+indent_size = 4
+indent_style = 'space'
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[".editorconfig"."*.{bat,cmd,ps1}"]
+end_of_line = 'crlf'
+
+[".editorconfig"."*.{js,json,json5,yml,yaml,md,rb}"]
+indent_size = 2
+
+[".editorconfig".Makefile]
+indent_style = 'tab'
+
+[".flake8".flake8]
+# Print the total number of errors:
+count = true
+
+# https://wemake-python-stylegui.de/en/latest/pages/usage/formatter.html
+format = 'wemake'
+
+# Let's not overcomplicate the code:
+max-complexity = 10
+
+# Accessibility/large fonts and PEP8 friendly.
+# This is being flexibly extended through the `flake8-length`:
+max-line-length = 79
+
+# Count the number of occurrences of each error/warning code and print a report:
+statistics = true
+
+# ## Plugin-provided settings: ##
+
+# flake8-pytest-style
+# PT001:
+pytest-fixture-no-parentheses = true
+# PT006:
+pytest-parametrize-names-type = 'tuple'
+# PT007:
+pytest-parametrize-values-type = 'tuple'
+pytest-parametrize-values-row-type = 'tuple'
+# PT023:
+pytest-mark-no-parentheses = true
+
+# flake8-typing-as-t
+# TYT02:
+typing-as-t-imported-name = '_t'
+
+[".mypy.ini".mypy]
+color_output = true
+error_summary = true
+
+check_untyped_defs = true
+
+disallow_any_explicit = true
+disallow_any_expr = true  # crashes with some decorators like `@tox.plugin.impl`
+disallow_any_decorated = true  # fails on `@hypothesis.given()`
+disallow_any_generics = true
+disallow_any_unimported = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+
+enable_error_code = "\nignore-without-code"
+
+extra_checks = true
+
+follow_imports = 'normal'
+
+local_partial_types = true
+
+mypy_path = "${MYPY_CONFIG_FILE_DIR}/src:${MYPY_CONFIG_FILE_DIR}/_type_stubs"
+
+no_implicit_reexport = true
+
+pretty = true
+
+show_column_numbers = true
+show_error_code_links = true
+show_error_codes = true
+show_error_context = true
+show_error_end = true
+
+# `strict` will pick up any future strictness-related settings:
+strict = true
+strict_equality = true
+strict_optional = true
+
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[".pylintrc.toml".tool.pylint.format]
+max-line-length = 79
