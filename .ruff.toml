@@ -1,0 +1,92 @@
+line-length = 79  # Accessibility-friendly
+
+namespace-packages = [
+  "src/tox_plugins/",
+  "tests/",
+]
+
+[format]
+quote-style = "single"
+
+[lint]
+external = [
+  "WPS",  # Do not remove noqa for wemake-python-style (WPS) checks
+]
+ignore = [
+  "CPY001",  # Skip copyright notice requirement at top of files
+
+  # Refs:
+  # * https://github.com/astral-sh/ruff/issues/6606
+  # * https://github.com/astral-sh/ruff/pull/13286
+  "DOC201",  # Ruff doesn't understand sphinx-native param lists
+  "DOC402",  # Ruff doesn't understand sphinx-native param lists
+  "DOC501",  # docstring-missing-exception  # Ruff doesn't understand sphinx-native param lists
+]
+preview = true  # Live dangerously
+select = [
+  "ALL",
+]
+task-tags = [
+  "FIXME",
+  "NOTE",
+  "Ref",
+  "Refs",
+  "TODO",
+]
+
+[lint.flake8-pytest-style]
+parametrize-values-type = "tuple"
+
+[lint.flake8-tidy-imports.banned-api]
+"unittest".msg = """
+Use `pytest` instead. For mocking and spying, inject the `mocker` fixture \
+from the already-integrated `pytest-mock` plugin into your tests instead.
+`pytest` also has a built-in `monkeypatch` fixture that can be used in \
+simple cases or combined with `mocker`.
+"""
+
+[lint.flake8-quotes]
+inline-quotes = "single"
+
+[lint.isort]
+combine-as-imports = true
+force-wrap-aliases = true
+lines-after-imports = 2
+section-order = [
+  "future",
+  "standard-library",
+  "testing",
+  "frameworks",
+  "platforms",
+  "third-party",
+  "first-party",
+  "local-folder",
+]
+
+[lint.isort.sections]
+frameworks = [
+  "tox",
+]
+platforms = [
+  "tox_plugins",
+]
+testing = [
+  "hypothesis",
+  "pytest",
+  "pytest_mock",
+  "pytest_subtests",
+]
+
+[lint.per-file-ignores]
+"tests/**.py" = [
+  # The following ignores have been researched and should be considered permanent
+  # each should be preceded with an explanation of each of the error codes
+  # If other ignores are added for a specific file in the section following this,
+  # these will need to be added to that line as well.
+
+  "PLC2701", # Allow importing internal files needed for testing
+  "S101",    # Allow use of `assert` in test files
+]
+
+[lint.pydocstyle]
+convention = "pep257"
