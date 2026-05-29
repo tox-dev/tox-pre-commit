@@ -1,0 +1,26 @@
+---
+
+# yamllint disable rule:line-length
+# Ref: https://help.github.com/en/github/building-a-strong-community/configuring-issue-templates-for-your-repository#configuring-the-template-chooser
+# yamllint enable rule:line-length
+blank_issues_enabled: false
+contact_links:
+- name: 🔐 Security bug report 🔥
+  url: ../security/advisories/new
+  about: |
+    Please learn how to report security vulnerabilities here.
+
+    For all security related bugs, file a private advisory instead
+    of using this issue tracker and you will receive a prompt
+    response.
+
+    For more information, see the project's SECURITY.md.
+- name: 💬 GitHub Discussions
+  url: ../discussions
+  about: >-
+    Please ask typical Q&A in the Discussions tab.
+- name: 📝 Code of Conduct
+  url: ../blob/main/.github/CODE_OF_CONDUCT.md
+  about: ❤ Be nice to other members of the community. ☮ Behave.
+
+...

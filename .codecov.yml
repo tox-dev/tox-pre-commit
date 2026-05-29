@@ -1,0 +1,39 @@
+---
+
+codecov:
+  notify:
+    manual_trigger: true  # prevent notifications until we notify Codecov
+    wait_for_ci: false
+
+  require_ci_to_pass: false
+
+comment:
+  require_changes: true
+
+coverage:
+  range: 100..100
+  status:
+    patch:
+      default:
+        target: 100%
+      pytest:
+        target: 100%
+        flags:
+        - pytest
+    project:
+      default:
+        target: 100%
+      lib:
+        flags:
+        - pytest
+        paths:
+        - src/
+        target: 100%
+      tests:
+        flags:
+        - pytest
+        paths:
+        - tests/
+        target: 100%
+
+...
