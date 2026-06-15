@@ -85,6 +85,7 @@ testing = [
   # these will need to be added to that line as well.
 
   "PLC2701", # Allow importing internal files needed for testing
+  "PLR0913", # Allow parametrized + fixture test signatures with many args
   "S101",    # Allow use of `assert` in test files
 ]
 

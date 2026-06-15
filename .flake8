@@ -104,8 +104,9 @@ per-file-ignores =
   # furthermore, we should be able to import and test private attributes
   # (WPS450) and modules (WPS436); `pytest.raises()` allows inspecting the
   # exception outside the CM (WPS441); additionally test docstrings don't
-  # need param lists (DAR, DCO020):
-  tests/**.py: DAR, DCO020, S101, S108, WPS430, WPS436, WPS441, WPS442, WPS450
+  # need param lists (DAR, DCO020); parametrized tests that also take
+  # pytest fixtures legitimately end up with many args (WPS211):
+  tests/**.py: DAR, DCO020, S101, S108, WPS211, WPS430, WPS436, WPS441, WPS442, WPS450
 
   tests/importable_test.py: ANN101, DAR
 
