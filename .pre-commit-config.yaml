@@ -186,6 +186,7 @@ repos:
     name: MyPy, for Python 3.15
     additional_dependencies:
     - lxml  # dep of `--txt-report`, `--cobertura-xml-report` & `--html-report`
+    - pytest-subtests
     - tox [testing] >= 4.54.0
     args:
     - --python-version=3.15
@@ -202,6 +203,7 @@ repos:
     name: MyPy, for Python 3.14
     additional_dependencies:
     - lxml
+    - pytest-subtests
     - tox [testing] >= 4.54.0
     args:
     - --python-version=3.14
@@ -218,6 +220,7 @@ repos:
     name: MyPy, for Python 3.13
     additional_dependencies:
     - lxml
+    - pytest-subtests
     - tox [testing] >= 4.54.0
     args:
     - --python-version=3.13
@@ -234,6 +237,7 @@ repos:
     name: MyPy, for Python 3.12
     additional_dependencies:
     - lxml
+    - pytest-subtests
     - tox [testing] >= 4.54.0
     args:
     - --python-version=3.12
@@ -250,6 +254,7 @@ repos:
     name: MyPy, for Python 3.11
     additional_dependencies:
     - lxml
+    - pytest-subtests
     - tox [testing] >= 4.54.0
     args:
     - --python-version=3.11
@@ -266,6 +271,7 @@ repos:
     name: MyPy, for Python 3.10
     additional_dependencies:
     - lxml
+    - pytest-subtests
     - tox [testing] >= 4.54.0
     args:
     - --python-version=3.10
@@ -287,11 +293,17 @@ repos:
     - pylint-pytest ~= 2.0.0a0
     - pytest-cov  # needed by pylint-pytest since it picks up pytest's args
     - pytest-xdist  # needed by pylint-pytest since it picks up pytest's args
+    - pytest-subtests
     - tox [testing] >= 4.54.0
 
 - repo: https://github.com/rhysd/actionlint.git
   rev: v1.7.10
   hooks:
   - id: actionlint
+    additional_dependencies:
+    # actionlint has a shellcheck integration which extracts shell scripts in
+    # `run:` steps from GitHub Actions and checks these with shellcheck.
+    # The integration only works if shellcheck is installed.
+    - github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1
 
 ...
