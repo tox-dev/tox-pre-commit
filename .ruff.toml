@@ -13,14 +13,14 @@ external = [
   "WPS",  # Do not remove noqa for wemake-python-style (WPS) checks
 ]
 ignore = [
-  "CPY001",  # Skip copyright notice requirement at top of files
+  "missing-copyright-notice",  # Skip copyright notice requirement at top of files
 
   # Refs:
   # * https://github.com/astral-sh/ruff/issues/6606
   # * https://github.com/astral-sh/ruff/pull/13286
-  "DOC201",  # Ruff doesn't understand sphinx-native param lists
-  "DOC402",  # Ruff doesn't understand sphinx-native param lists
-  "DOC501",  # docstring-missing-exception  # Ruff doesn't understand sphinx-native param lists
+  "docstring-missing-returns",  # Ruff doesn't understand sphinx-native param lists
+  "docstring-missing-yields",  # Ruff doesn't understand sphinx-native param lists
+  "docstring-missing-exception",  # docstring-missing-exception  # Ruff doesn't understand sphinx-native param lists
 ]
 preview = true  # Live dangerously
 select = [
@@ -84,9 +84,9 @@ testing = [
   # If other ignores are added for a specific file in the section following this,
   # these will need to be added to that line as well.
 
-  "PLC2701", # Allow importing internal files needed for testing
-  "PLR0913", # Allow parametrized + fixture test signatures with many args
-  "S101",    # Allow use of `assert` in test files
+  "import-private-name", # Allow importing internal files needed for testing
+  "too-many-arguments", # Allow parametrized + fixture test signatures with many args
+  "assert",    # Allow use of `assert` in test files
 ]
 
 [lint.pydocstyle]

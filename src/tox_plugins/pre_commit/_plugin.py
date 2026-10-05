@@ -13,7 +13,6 @@ from tox.plugin import impl
 if _t.TYPE_CHECKING:
     from collections import abc as _c  # noqa: WPS347
 
-    from tox.config.sets import ConfigSet
     from tox.session.state import State
 
 
@@ -38,12 +37,10 @@ def tox_extend_envs() -> _c.Iterable[str]:
 
 @impl
 def tox_add_core_config(
-    core_conf: ConfigSet,  # ruff: ignore[unused-function-argument]  # pylint: disable=unused-argument
     state: State,
 ) -> None:
     """Inject default configuration for the pre-commit environment.
 
-    :param core_conf: The core tox configuration set (unused).
     :param state: The tox session state to inject environments into.
     """
     pos_args = state.conf.pos_args(to_path=None)
