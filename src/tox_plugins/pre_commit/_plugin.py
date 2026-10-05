@@ -38,7 +38,7 @@ def tox_extend_envs() -> _c.Iterable[str]:
 
 @impl
 def tox_add_core_config(
-    core_conf: ConfigSet,  # noqa: ARG001  # pylint: disable=unused-argument
+    core_conf: ConfigSet,  # ruff: ignore[unused-function-argument]  # pylint: disable=unused-argument
     state: State,
 ) -> None:
     """Inject default configuration for the pre-commit environment.
