@@ -7,7 +7,7 @@ on:
     paths:  # only changes to this workflow itself trigger PR testing
     - .github/workflows/scheduled-runs.yml
   schedule:
-  - cron: 3 5 * * *  # run daily at 5:03 UTC
+  - cron: 31 7 * * *  # run daily at 7:31 UTC
   workflow_dispatch:  # manual trigger
 
 run-name: >-
