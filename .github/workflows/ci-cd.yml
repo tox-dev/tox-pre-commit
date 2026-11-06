@@ -596,6 +596,7 @@ jobs:
         fail_ci_if_error: >-
           ${{ fromJSON(needs.pre-setup.outputs.is-upstream-repository) }}
         run_command: send-notifications
+        token: ${{ secrets.CODECOV_TOKEN }}
 
   publish-pypi:
     name: >-
