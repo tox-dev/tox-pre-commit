@@ -291,6 +291,9 @@ repos:
     additional_dependencies:
     - covdefaults  # needed by pylint-pytest due to pytest-cov loading coverage
     - pylint-pytest ~= 2.0.0a0
+    # pylint-pytest crashes on pytest 9.2:
+    # https://github.com/pylint-dev/pylint-pytest/issues/163
+    - pytest < 9.2
     - pytest-cov  # needed by pylint-pytest since it picks up pytest's args
     - pytest-xdist  # needed by pylint-pytest since it picks up pytest's args
     - pytest-subtests
