@@ -32,11 +32,6 @@ repos:
     - file
     - symlink
 
-- repo: https://github.com/Kludex/no-optional.git
-  rev: 0.4.0
-  hooks:
-  - id: no_optional
-
 - repo: https://github.com/astral-sh/ruff-pre-commit.git
   rev: v0.16.10
   hooks:
