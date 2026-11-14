@@ -18,7 +18,9 @@ coverage number alone. Coverage still matters a lot -- 100%
 coverage is a genuinely useful self-check (e.g. it can catch tests
 that silently start getting skipped in CI). The point is: don't
 game the number -- a test that exercises a line without
-meaningfully checking behavior doesn't count, passing or not. The
+meaningfully checking behavior doesn't count, passing or not (see
+"Don't game the messenger either" in
+[DONT_SHOOT_THE_MESSENGER.md](DONT_SHOOT_THE_MESSENGER.md)). The
 same reasoning-over-metrics standard applies to every change, not
 just tests: infra, packaging, and runtime code all need
 well-reasoned, architecturally sound justification, not just a
@@ -29,6 +31,37 @@ is never the agent's call -- see
 [DONT_SHOOT_THE_MESSENGER.md](DONT_SHOOT_THE_MESSENGER.md).
 
 Here: `.codecov.yml` targets 100%.
+
+## Tests state what the code should do, not what it does
+
+Expected values come from somewhere other than the code under
+test: the issue, a spec or RFC, upstream library docs, or the
+observed behavior of a reference implementation. A test whose
+expectations were read off the implementation only restates it,
+and it keeps passing when the code is wrong in the same way.
+Doing so counts as silencing -- see
+[DONT_SHOOT_THE_MESSENGER.md](DONT_SHOOT_THE_MESSENGER.md).
+
+- Show that a regression test catches its bug. Run it against
+  the unfixed code (revert or stash the fix) and confirm it fails
+  for the reason the test names, then confirm it passes with the
+  fix. Say in the PR how this was checked. This is a verification
+  step, not a commit-ordering rule -- the test still lands in the
+  same commit as the fix.
+- For new behavior, write down the expected outcomes from the
+  issue or spec before reading or writing the implementation, and
+  bring them to the operator when the source is ambiguous rather
+  than settling the question by running the code.
+- Assert on outcomes a caller can observe, not on how the code
+  gets there.
+- When an expected value can't be traced to a source outside the
+  code, say so to the operator instead of copying it from the
+  current output.
+
+Here: the integration tests run real tox, so tox's and the
+`pre-commit` tool's documented behavior -- e.g. how posargs
+replace a default, or what `pre-commit run --all-files` does --
+is the reference, not the plugin's own code.
 
 ## No test classes
 
@@ -73,6 +106,31 @@ boundaries: the system clock/timezone, environment variables, or
 swapping in a stub server. It's not a substitute for designing
 components to be testable on their own.
 
+## Test doubles for intercepted components
+
+When end-to-end tests need to patch or intercept a real component
+-- say, to withhold a server's replies -- the test double gets its
+own directory in the tests' stub area, named after its purpose
+rather than the library it's built on. Its `fixtures.py` module is
+the entry point, loaded as a local pytest plugin.
+
+- Entry points are imported eagerly at startup, so they must not
+  import their component's optional dependencies at the module
+  level. Import those inside a fixture through
+  `pytest.importorskip()`, so that a missing one skips only the
+  tests that need it. That's a declared optional dependency, not
+  a way to dodge a failure.
+- The stub area is excluded from the doctest collection, which
+  would otherwise import those dependencies.
+- Code running in child processes only gets its coverage recorded
+  when those processes exit cleanly instead of being killed.
+
+Here: there are no test doubles yet. The first one would go in
+`tests/_stubs/<component>/`, added to `pytest_plugins` in
+`tests/conftest.py` next to `tox.pytest`, and excluded through
+`norecursedirs` in `pytest.ini` -- the same layout ansible/pylibssh
+uses.
+
 ## Test layout
 
 Test files are named `<topic>_test.py`, not `test_<topic>.py`.
@@ -107,7 +165,20 @@ test `xfail` because it broke is silencing it.
 
 Use `pytest.raises(..., match=...)` -- never a bare
 `pytest.raises(SomeError)` -- so the assertion pins down which
-failure is expected, not just its type.
+failure is expected, not just its type. Use a raw string (e.g.
+`r'^foo\.bar$'`) or `re.escape(...)` for the `match=` pattern when it
+contains regex metacharacters, to keep the regex intention explicit.
+
+Keep each test focused on a few assertions. When testing a
+multi-stage workflow (e.g. write followed by read), split the
+stages into separate test functions. Assign a non-trivial
+expression (such as `len(...)`) that a test keeps repeating to a
+local variable instead.
+
+Here: wemake-python-styleguide enforces both through flake8, at
+its default limits -- at most 5 `assert` statements per function
+(WPS218), and no expression repeated more than 4 times in one
+function (WPS204).
 
 ## Filesystem fixtures
 

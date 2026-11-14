@@ -38,6 +38,11 @@ Tests:
 - Weakening assertions: removing them, dropping `match=` from
   `pytest.raises()`, catching a broader exception type, or
   changing an expected value to match buggy output.
+- Taking a test's expected values from the code's current output
+  instead of from the issue, a spec, or a reference
+  implementation. Such a test agrees with whatever bugs the code
+  has, so it can never report them. See
+  [TESTING.md](TESTING.md#tests-state-what-the-code-should-do-not-what-it-does).
 - Adding `ignore` entries to `filterwarnings`.
 
 Thresholds and CI:
@@ -50,6 +55,42 @@ Reporting:
 - Running a subset (`-k`, `--deselect`, `--ignore`) is fine while
   iterating, but never report a run as green while failures are
   excluded from it.
+
+## Don't game the messenger either
+
+Silencing has a mirror image: making a check report success while
+the thing it measures isn't actually true. A coverage number going
+up is not proof that anything is better tested. Gaming a check is
+no more the agent's call than silencing it.
+
+These count as gaming:
+
+- Tests that execute lines without checking behavior: no
+  assertions, or assertions that can't fail.
+- Reaching code through private or internal API (`_name()`), or
+  calling it in an order or a number of times no real caller
+  would, just to mark lines as covered.
+- Forcing an object into a state that its public API, or a real
+  external scenario, can never produce.
+
+Instead, drive the code the way it runs for real: through the
+public API, or an end-to-end scenario -- a full object lifecycle,
+a failure provoked at a real boundary. Before writing a test for
+an uncovered line, check whether existing tests already reach it
+that way, and whether the coverage tool can see it at all. When a
+line can't be reached realistically, stop and bring it to the
+operator as a finding, not a test: it's either dead or purely
+defensive code -- the operator decides whether to drop it or to
+exclude it as described in [Presenting a case](#presenting-a-case)
+-- or a blind spot of the tooling. Say what each new test proves,
+not which lines it turns green.
+
+Here: the whole plugin lives in the private `_plugin` module, and
+tox only reaches it through the entry point -- the integration
+tests drive it the same way, through real tox runs.
+`tests/smoke_test.py` imports `_plugin` directly with an assertion
+that can't fail. It's a skeleton check that predates this rule,
+not a pattern to copy.
 
 ## Presenting a case
 
@@ -131,8 +172,8 @@ atomic change, never mixed into a functional one. See
 
 `.claude/hooks/guard_silenced_checks.py` makes Claude Code ask the
 operator before edits that add suppression markers, reduce the
-number of tests or assertions under `tests/`, touch tool configs,
-or bypass/delete things from the shell. That prompt is a backstop,
-not a rubber stamp: present the case as described above *before*
-attempting the edit. Agents other than Claude Code follow the same
+number of tests or assertions under `tests/`, add private-method
+calls there, touch tool configs, or bypass/delete things from the
+shell. That prompt is a backstop, not a rubber stamp: present the
+case as described above *before* attempting the edit. Agents other than Claude Code follow the same
 rule without the backstop.
